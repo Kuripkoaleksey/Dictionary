@@ -1,11 +1,7 @@
 //package com.company;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 class Slovar {
     private Map<String, Map<String, List<String>>> dictionary;
@@ -88,20 +84,20 @@ class Slovar {
 
     public void printLang() {
         int count = 1;
-        for (String lang : dictionary.keySet()) {
-            System.out.println(count++ + ") " + lang);
+        for (String language : dictionary.keySet()) {
+            System.out.println(count++ + ") " + language);
         }
     }
 
     public void printSlovarLang(String key){
         int count = 1;
         for (String newKey:dictionary.keySet()) {
-            System.out.println(newKey);
+//            System.out.println(newKey);
             System.out.println("_______________________________________________________");
             for (String word:dictionary.get(newKey).keySet()) {
                 System.out.print(word+" : ");
-                for (String tr:dictionary.get(newKey).get(word)) {
-                    System.out.print(tr+" , ");
+                for (String translate:dictionary.get(newKey).get(word)) {
+                    System.out.print(translate+" . ");
                 }
                 System.out.println();
             }
@@ -109,27 +105,96 @@ class Slovar {
 //        System.out.println(dictionary.get(key));
     }
 
-}
+
+    public static String mScanerString() {
+        String k=null;
+        Scanner scanner = new Scanner(System.in);
+        boolean isString = scanner.hasNextLine();
+        if (isString) k = scanner.nextLine();{
+
+            return k;}
+    }
+    public static int mScanerInt() throws Exception {
+        int k = 0;
+        Scanner scanner = new Scanner(System.in);
+        boolean isInt = scanner.hasNextInt();
+        if (isInt) k = scanner.nextInt();
+        if (k >= 1 & k <= 5) {
+            return k;
+        }
+        throw new Exception("Ввести нужно только число число от 1 до 5, буквы вводить нельзя");
+
+    }
+    }
 
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Slovar slovar = new Slovar();
         slovar.addLang("en");
         slovar.addLang("ru");
-        slovar.removeLang("En");
-
-        ArrayList<String> arr = new ArrayList<String>();
-        arr.add("Êîøêà");
-        arr.add("Êîòåíîê");
-
-//        System.out.println(slovar.addWord("en", "Cat", arr));
-//        System.out.println(slovar.addWord("en", "Cat", "Êîøêà"));
         slovar.addWord("en", "Car", "Автомобиль");
         slovar.addWord("en", "Car", "Машина");
         slovar.addWord("en", "Car", "Транспорт");
         slovar.addWord("en", "Head", "Голова");
-        slovar.printSlovarLang("en");
+        slovar.addWord("ru", "кот", "cat");
+        int m=0;
+        String k = null;
+        Scanner scanner=new Scanner(System.in);
+        System.out.println("Для использования словаря выберите пункт меню");
+        System.out.println("1. Показать имеющиеся словари");
+        System.out.println("2. Показать показать все имеющиеся в словатрях слова с преводом");
+        System.out.println("3. Добавить слова в словарь");
+        System.out.println("4. Удалить словарь целеком");
+        m=slovar.mScanerInt();
+        switch (m) {
+            case 1:
+                slovar.printLang();
+                break;
+            case 2:
+                slovar.printSlovarLang("en");
+                break;
+            case 3:
+                ArrayList<String> arr = new ArrayList<String>();
+                System.out.println("Напишите слово, нажмите Enter и напишите перевод этого слова");
+            slovar.addWord("en", slovar.mScanerString(), slovar.mScanerString());
+                System.out.println("Теперь словарь имеет такие слова");
+                slovar.printSlovarLang("en");
+                break;
+            case 4:
+                System.out.println("Сейчас имеются следующие словари:");
+                slovar.printLang();
+                System.out.println("Введите номер словаря, который хотите удалить");
+                m=slovar.mScanerInt();
+                switch (m) {
+                    case 1:
+                    slovar.removeLang("en");
+                    System.out.println("Теперь остались следующие словари, содержащие такие слова");
+                    slovar.printSlovarLang("en");
+
+                case 2:
+                    slovar.removeLang("ru");
+                    System.out.println("Теперь остались следующие словари, содержащие такие слова");
+                    slovar.printLang();
+                    slovar.printSlovarLang("en");
+//
+            }
+//            case 5:
+//                arr[4] = '0';
+//                break;
+//            default:
+//                System.out.println("Введите число от 1 до 5");
+//                break;
+        }
+
+//        k= Slovar.mScanerString();
+//
+
+//        slovar.printSlovarLang("en");
+//
+//        slovar.printSlovarLang("ru");
+
+
     }
 }
