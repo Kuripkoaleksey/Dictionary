@@ -4,6 +4,15 @@ import java.util.*;
 import java.util.ArrayList;
 
 class Slovar {
+    public static String[] getArr() {
+        return arr;
+    }
+
+    public static void setArr() {
+        Slovar.arr = arr;
+    }
+
+    private static String[] arr;
     private Map<String, Map<String, List<String>>> dictionary;
 
     {
@@ -36,24 +45,182 @@ class Slovar {
         }
         return listArr;
     }
+    public List<String> checkList(List<String> nowArrWord, List<String> newArrWord) {
+        for (String word : newArrWord) {
+            if (!nowArrWord.contains(word)) {
+                nowArrWord.add(word);
+            }
+        }
+        return nowArrWord;
+    }
 
     public boolean addWord(String keyLang, String originalWord, List<String> arrWord) {
-        originalWord = originalWord.toLowerCase();
-        keyLang=keyLang.toLowerCase();
-        arrWord = toLowerCase(arrWord);
+        originalWord = originalWord.toLowerCase();// ������������� ��������
+        keyLang = keyLang.toLowerCase();// ������������� ��������
+        arrWord = toLowerCase(arrWord);// ������������� ��������
         if (dictionary.containsKey(keyLang)) {
-            if(dictionary.get(keyLang).containsKey(originalWord)) {
+            if (dictionary.get(keyLang).containsKey(originalWord)) {
+                List<String> arr = dictionary.get(keyLang).get(originalWord);
+                List<String> arrNew;
+                //��������� ���� �� ����� ������������� � arrWord
+                arrNew = checkList(arr, arrWord);
+                if (arr.size() != arrNew.size()) {
+                    dictionary.get(keyLang).put(originalWord, arrNew);
+                    return true;
+                }
                 return false;
-            }else {
+            } else {
                 dictionary.get(keyLang).put(originalWord, arrWord);
                 return true;
             }
-        }else {
-            if(addLang(keyLang))
+        } else {
+            if (addLang(keyLang))
                 return addWord(keyLang, originalWord, arrWord);
             else return false;
         }
     }
+
+    public void printSlovarLang(String newKey) {
+        int count = 1;
+        if (dictionary.containsKey(newKey)) {
+            System.out.println(newKey);
+            System.out.println("--------------------------------");
+            for (String word : dictionary.get(newKey).keySet()) {
+                System.out.print(word + " : ");
+                for (String tr : dictionary.get(newKey).get(word)) {
+                    System.out.print(tr + " , ");
+                }
+                System.out.println();
+            }
+        }
+    }
+
+//    public void printSlovarLang() {
+//        int count = 1;
+//        if (dictionary.keySet().size() > 0) {
+//
+//            for (String lang : dictionary.keySet()) {
+//                System.out.println(count++ + ") " + lang);
+//            }
+//        }
+//    }
+
+    public String getLangByIndex(int index) {
+        int count = 1;
+        if (dictionary.keySet().size() >= index && index >= 0) {
+
+            for (String lang : dictionary.keySet()) {
+                if (index == count) return lang;
+                count++;
+                //  System.out.println(count++ + ") "+ lang);
+            }
+        }
+
+        return null;
+    }
+
+    public void searchWord(String lang, String search) {
+        int count = 1;
+        search = search.toLowerCase();
+        if (dictionary.containsKey(lang)) {
+            for (String word : dictionary.get(lang).keySet()) {
+                if (word.startsWith(search)) {
+                    if (count == 1)
+                        System.out.println("Search : " + search);
+                    System.out.println(count++ + ") " + word);
+                }
+            }
+            if (count == 1) {
+                System.out.println("Такого слова нет!!!");
+            }
+        }
+    }
+
+    public void printWordSearch(String lang, String newWord) {
+        int count = 1;
+        String[] arr = newWord.split("[*]");
+        String startChar = arr[0];
+        String endChar = arr[1];
+        lang = lang.toLowerCase();
+        startChar = startChar.toLowerCase();
+        endChar = endChar.toLowerCase();
+        if (dictionary.containsKey(lang)) {
+            for (String word : dictionary.get(lang).keySet()) {
+                if (word.startsWith(startChar) && word.endsWith(endChar)) {
+                    if (count == 1)
+                        System.out.println("Начало : " + startChar + " Конец : " + endChar);
+                    System.out.print(count++ + ") " + word + " ");
+                    for (String tr : dictionary.get(lang).get(word)) {
+                        System.out.print(tr + " ");
+                    }
+                    System.out.println();
+                }
+                if (count == 1) {
+                    System.out.println("Такого слова нет !!!");
+                }
+            }
+        }
+    }
+
+    public void printWordSize(String lang, String newWord) {
+        int count = 1;
+        String[] arr = newWord.split("[_]");
+        String startChar = arr[0];
+        String endChar = arr[1];
+        lang = lang.toLowerCase();
+        startChar = startChar.toLowerCase();
+        endChar = endChar.toLowerCase();
+        if (dictionary.containsKey(lang)) {
+            for (String word : dictionary.get(lang).keySet()) {
+                if (word.startsWith(startChar) && word.endsWith(endChar) && word.length() == 3) {
+                    if (count == 1)
+                        System.out.println("Начало : " + startChar + " Конец : " + endChar);
+                    System.out.print(count++ + ") " + word + " ");
+
+                    for (String tr : dictionary.get(lang).get(word)) {
+                        System.out.print(tr + " ");
+                    }
+                    System.out.println();
+                }
+
+            }
+            if (count == 1) {
+                System.out.println("Такого слова нет !!!");
+            }
+        }
+    }
+
+    public boolean checkWordChar(String word, String search) {
+                if (word.length() == search.length()) {
+            for (int i = 0; i < search.length(); i++) {
+                if (word.charAt(i) != search.charAt(i)) {
+                    if (search.charAt(i) != '_')
+                        return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+
+//    public boolean addWord(String keyLang, String originalWord, List<String> arrWord) {
+//        originalWord = originalWord.toLowerCase();
+//        keyLang=keyLang.toLowerCase();
+//        arrWord = toLowerCase(arrWord);
+//        if (dictionary.containsKey(keyLang)) {
+//            if(dictionary.get(keyLang).containsKey(originalWord)) {
+//                return false;
+//            }else {
+//                dictionary.get(keyLang).put(originalWord, arrWord);
+//                return true;
+//            }
+//        }else {
+//            if(addLang(keyLang))
+//                return addWord(keyLang, originalWord, arrWord);
+//            else return false;
+//        }
+//    }
     public boolean addWord(String keyLang, String originalWord, String word) {
         originalWord = originalWord.toLowerCase();
         keyLang=keyLang.toLowerCase();
@@ -89,21 +256,21 @@ class Slovar {
         }
     }
 
-    public void printSlovarLang(String key){
-        int count = 1;
-        for (String newKey:dictionary.keySet()) {
-//            System.out.println(newKey);
-            System.out.println("_______________________________________________________");
-            for (String word:dictionary.get(newKey).keySet()) {
-                System.out.print(word+" : ");
-                for (String translate:dictionary.get(newKey).get(word)) {
-                    System.out.print(translate+" . ");
-                }
-                System.out.println();
-            }
-        }
-//        System.out.println(dictionary.get(key));
-    }
+//    public void printSlovarLang(String key){
+//        int count = 1;
+//        for (String newKey:dictionary.keySet()) {
+//
+//            System.out.println("_______________________________________________________");
+//            for (String word:dictionary.get(newKey).keySet()) {
+//                System.out.print(word+" : ");
+//                for (String translate:dictionary.get(newKey).get(word)) {
+//                    System.out.print(translate+" . ");
+//                }
+//                System.out.println();
+//            }
+//        }
+//
+//    }
 
 
     public static String mScanerString() {
@@ -114,6 +281,19 @@ class Slovar {
 
             return k;}
     }
+
+    public static String[] mScanerStringArr() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Сколько значений перевода слов вы хотите ввести? ");
+        int numWords = scanner.nextInt();
+        String dumb= scanner.nextLine();
+        String words[]= new String[numWords];
+        for(int i=0;i<numWords; i++)
+        {
+            words[i]=scanner.nextLine();
+            }
+            return words;}
+
     public static int mScanerInt() throws Exception {
         int k = 0;
         Scanner scanner = new Scanner(System.in);
@@ -134,9 +314,7 @@ public class Main {
         Slovar slovar = new Slovar();
         slovar.addLang("en");
         slovar.addLang("ru");
-        slovar.addWord("en", "Car", "Автомобиль");
-        slovar.addWord("en", "Car", "Машина");
-        slovar.addWord("en", "Car", "Транспорт");
+        slovar.addWord("en", "Car","автомобиль");
         slovar.addWord("en", "Head", "Голова");
         slovar.addWord("ru", "кот", "cat");
         int m=0;
@@ -157,8 +335,8 @@ public class Main {
                 break;
             case 3:
                 ArrayList<String> arr = new ArrayList<String>();
-                System.out.println("Напишите слово, нажмите Enter и напишите перевод этого слова");
-            slovar.addWord("en", slovar.mScanerString(), slovar.mScanerString());
+                System.out.println("Напишите название словаря, нажмите Enter, напишите слово, нажмите Enter и напишите перевод этого слова");
+            slovar.addWord(slovar.mScanerString(), slovar.mScanerString(), List.of(slovar.mScanerStringArr()));
                 System.out.println("Теперь словарь имеет такие слова");
                 slovar.printSlovarLang("en");
                 break;
